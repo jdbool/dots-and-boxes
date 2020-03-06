@@ -25,9 +25,9 @@ body {
 canvas {
 	/* Scale */
 	width: calc(100vw - 2em);
-	max-width: 400px;
+	max-width: calc(100vh - 20em);
 	height: calc(100vw - 2em);
-	max-height: 400px;
+	max-height: calc(100vh - 20em);
 
 	/* Center */
 	position: absolute;
