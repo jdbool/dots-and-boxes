@@ -32,6 +32,14 @@ canvas {
 	margin-right: -50%;
 	transform: translate(-50%, -50%);
 
-	/* Border */
+	/* Misc */
+	border: 2px solid white;
 	border-radius: 1em;
+	box-shadow: 0px 0px 3em #111;
+}
+#redScore {
+	color: crimson;
+}
+#blueScore {
+	color: dodgerblue;
 }
