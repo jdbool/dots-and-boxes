@@ -1,5 +1,6 @@
 /* eslint-env browser */
 
+const body = document.body;
 const gameContainer = document.getElementById('gameContainer');
 const status = document.getElementById('status');
 const canvas = document.querySelector('canvas');
@@ -15,45 +16,42 @@ const initGame = numDots => {
 
 	const players = {
 		red: {
-			name: 'Red',
 			colour: 'crimson',
 			numBoxes: 0
 		},
 		blue: {
-			name: 'Blue',
 			colour: 'dodgerblue',
 			numBoxes: 0
 		}
 	};
+
+	let shouldRedraw = true;
 
 	let width;
 	let dotSpacing;
 	let dotRadius;
 
 	let turn = 'red';
-	let shouldRedraw = true;
+
+	let hoverLine = null;
+
+	const lines = [];
+	const boxes = [];
 
 	const updateTurn = () => {
 		const player = players[turn];
-		setStatus(`${player.name}'s Turn`, player.colour);
+		setStatus(`${turn}'s turn`, player.colour);
 	};
-
 	updateTurn();
 
 	const updateScore = () => {
 		document.getElementById('redScore').innerText = players.red.numBoxes;
 		document.getElementById('blueScore').innerText = players.blue.numBoxes;
 	};
+	updateScore();
 
 	const dotToPx = dot => ((dot / (numDots - 1)) * 0.8 + 0.1) * width;
 	const pxToDot = px => ((px / width - 0.1) / 0.8) * (numDots - 1);
-
-	let mouseDotX = null;
-	let mouseDotY = null;
-	let hoverLine = null;
-
-	const lines = [];
-	const boxes = [];
 
 	const lineAt = (x1, y1, x2, y2) =>
 		lines.find(
@@ -63,7 +61,11 @@ const initGame = numDots => {
 
 	const boxAt = (x1, y1) => boxes.find(box => box[0] === x1 && box[1] === y1);
 
-	const updateHoverLine = () => {
+	const updateCursor = () => {
+		canvas.style.cursor = hoverLine ? 'pointer' : 'auto';
+	};
+
+	const updateHoverLine = (mouseDotX, mouseDotY) => {
 		const lastHoverLine = hoverLine;
 
 		hoverLine = null;
@@ -75,7 +77,6 @@ const initGame = numDots => {
 		const isCloseX = Math.abs(mouseDotX - roundedDotX) < tolerance;
 		const isCloseY = Math.abs(mouseDotY - roundedDotY) < tolerance;
 
-		// isCloseX XOR isCloseY
 		if (isCloseX != isCloseY) {
 			if (!isCloseX) {
 				const lower = Math.floor(mouseDotX);
@@ -94,15 +95,18 @@ const initGame = numDots => {
 			hoverLine = null;
 		}
 
-		if (lastHoverLine !== hoverLine) shouldRedraw = true;
+		if (lastHoverLine !== hoverLine) {
+			updateCursor();
+			shouldRedraw = true;
+		}
 	};
 
 	canvas.onmousemove = function(e) {
 		const rect = canvas.getBoundingClientRect();
-		mouseDotX = pxToDot(e.clientX - rect.left);
-		mouseDotY = pxToDot(e.clientY - rect.top);
+		const mouseDotX = pxToDot(e.clientX - rect.left);
+		const mouseDotY = pxToDot(e.clientY - rect.top);
 
-		updateHoverLine();
+		updateHoverLine(mouseDotX, mouseDotY);
 	};
 
 	const boxLineOffsets = [
@@ -118,6 +122,7 @@ const initGame = numDots => {
 			hoverLine.push(turn);
 			lines.push(hoverLine);
 			hoverLine = null;
+			updateCursor();
 
 			let extraTurn = false;
 			let numUnfilledBoxes = 0;
@@ -127,6 +132,7 @@ const initGame = numDots => {
 				for (let x = 0; x < numDots - 1; ++x) {
 					if (!boxAt(x, y)) {
 						++numUnfilledBoxes;
+
 						let shouldFill = true;
 						for (const [x1, y1, x2, y2] of boxLineOffsets) {
 							if (!lineAt(x1 + x, y1 + y, x2 + x, y2 + y)) {
@@ -134,19 +140,24 @@ const initGame = numDots => {
 								break;
 							}
 						}
+
 						if (shouldFill) {
+							--numUnfilledBoxes;
+
 							boxes.push([x, y, turn]);
+
 							players[turn].numBoxes++;
 							updateScore();
+
 							extraTurn = true;
-							--numUnfilledBoxes;
 						}
 					}
 				}
 			}
 
 			if (!numUnfilledBoxes) {
-				alert('gg');
+				console.log('gg');
+				body.classList.add('gameWon');
 			} else if (!extraTurn) {
 				// End turn
 				turn = turn === 'red' ? 'blue' : 'red';
@@ -158,8 +169,6 @@ const initGame = numDots => {
 	};
 
 	canvas.onmouseleave = () => {
-		mouseDotX = null;
-		mouseDotY = null;
 		hoverLine = null;
 	};
 
@@ -257,4 +266,4 @@ const initGame = numDots => {
 	requestAnimationFrame(drawCanvas);
 };
 
-initGame(4);
+initGame(5);
