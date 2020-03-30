@@ -49,9 +49,73 @@ canvas {
 .gameWon canvas {
 	box-shadow: 0px 0px 5em green;
 }
+.gameLost {
+	background-color: #443333;
+}
+.gameLost canvas {
+	box-shadow: 0px 0px 5em red;
+}
 #redScore {
 	color: crimson;
 }
 #blueScore {
 	color: dodgerblue;
+}
+.bigContainer {
+	width: 90%;
+	max-width: 500px;
+	margin: auto;
+}
+.bigContainer p {
+	font-size: larger;
+}
+.bigContainer p,
+.bigContainer h1 {
+	text-align: center;
+	height: 3em;
+	line-height: 3em;
+}
+.bigContainer button {
+	font-size: large;
+	font-weight: bold;
+	height: 100%;
+	padding-left: 1em;
+	padding-right: 1em;
+	border: 2px solid #29b6f6;
+	border-radius: 0.5em;
+	color: #29b6f6;
+	background-color: transparent;
+	outline: none;
+	vertical-align: middle;
+}
+.bigContainer button:hover {
+	border-color: #81d4fa;
+	color: #81d4fa;
+	cursor: pointer;
+}
+.bigContainer button:active {
+	background-color: #81d4fa;
+	color: white;
+}
+.bigContainer input {
+	font-family: 'Courier New', Courier, monospace;
+	font-size: large;
+	font-weight: bold;
+	height: 100%;
+	background-color: transparent;
+	color: white;
+	border: none;
+	outline: none;
+}
+.full {
+	width: 100%;
+}
+#roomCode {
+	width: 70%;
+}
+#joinButton {
+	width: 30%;
+}
+#joinProblem {
+	color: red;
 }

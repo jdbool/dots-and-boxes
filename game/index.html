@@ -8,13 +8,31 @@
 	</head>
 	<body>
 		<h2 class="header">Dots & Boxes</h2>
+		<div id="joinContainer" class="bigContainer">
+			<p>
+				<button id="newGameButton" class="full">New Game</button>
+			</p>
+			<p>
+				or
+			</p>
+			<p>
+				<input type="text" id="roomCode" placeholder="Room Code" /><button
+					id="joinButton"
+				>
+					Join
+				</button>
+			</p>
+			<p id="joinProblem"></p>
+		</div>
+		<div id="miscContainer" class="bigContainer" style="display:none"></div>
 		<div id="gameContainer" style="display:none">
-			<h3 class="header" id="status"></h3>
+			<h3 class="header" id="gameStatus"></h3>
 			<h3 class="header">
 				<span id="redScore">0</span> &ndash; <span id="blueScore">0</span>
 			</h3>
 			<canvas></canvas>
 		</div>
-		<script src="game.js"></script>
+		<script src="socket.io.js"></script>
+		<script src="client.js"></script>
 	</body>
 </html>
