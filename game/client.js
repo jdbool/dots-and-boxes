@@ -108,24 +108,26 @@ const initGame = (size, ourColor) => {
 
 		hoverLine = null;
 
-		const roundedDotX = Math.round(mouseDotX);
-		const roundedDotY = Math.round(mouseDotY);
+		if (turn === ourColor) {
+			const roundedDotX = Math.round(mouseDotX);
+			const roundedDotY = Math.round(mouseDotY);
 
-		const tolerance = 0.15;
-		const isCloseX = Math.abs(mouseDotX - roundedDotX) < tolerance;
-		const isCloseY = Math.abs(mouseDotY - roundedDotY) < tolerance;
+			const tolerance = 0.15;
+			const isCloseX = Math.abs(mouseDotX - roundedDotX) < tolerance;
+			const isCloseY = Math.abs(mouseDotY - roundedDotY) < tolerance;
 
-		if (isCloseX != isCloseY) {
-			if (!isCloseX) {
-				const lower = Math.floor(mouseDotX);
-				const upper = Math.ceil(mouseDotX);
-				if (lower >= 0 && upper < size)
-					hoverLine = [lower, roundedDotY, upper, roundedDotY];
-			} else {
-				const lower = Math.floor(mouseDotY);
-				const upper = Math.ceil(mouseDotY);
-				if (lower >= 0 && upper < size)
-					hoverLine = [roundedDotX, lower, roundedDotX, upper];
+			if (isCloseX != isCloseY) {
+				if (!isCloseX) {
+					const lower = Math.floor(mouseDotX);
+					const upper = Math.ceil(mouseDotX);
+					if (lower >= 0 && upper < size)
+						hoverLine = [lower, roundedDotY, upper, roundedDotY];
+				} else {
+					const lower = Math.floor(mouseDotY);
+					const upper = Math.ceil(mouseDotY);
+					if (lower >= 0 && upper < size)
+						hoverLine = [roundedDotX, lower, roundedDotX, upper];
+				}
 			}
 		}
 
@@ -205,9 +207,20 @@ const initGame = (size, ourColor) => {
 	const resizeCanvas = () => {
 		const scale = window.devicePixelRatio || 1;
 
-		width = canvas.clientWidth;
-		dotSpacing = (width / (size - 1)) * 0.8 + 0.1;
-		dotRadius = width / 8 / size;
+		const fitHeight = window.innerHeight - 300;
+		const fitWidth = window.innerWidth - 30;
+
+		width = Math.floor(Math.min(fitHeight, fitWidth));
+		// Force even width or it becomes blurry
+		width += width % 2;
+
+		canvas.style.width = width + 'px';
+		canvas.style.height = width + 'px';
+
+		dotSpacing = Math.round((width / (size - 1)) * 0.8 + 0.1);
+		dotRadius = Math.round(width / 8 / size);
+
+		canvas.style.borderRadius = dotRadius + 'px';
 
 		canvas.width = width * scale;
 		canvas.height = width * scale;
@@ -262,8 +275,7 @@ const initGame = (size, ourColor) => {
 		if (shouldRedraw || hoverLine) {
 			shouldRedraw = false;
 
-			ctx.fillStyle = '#ccc';
-			ctx.fillRect(0, 0, width, width);
+			ctx.clearRect(0, 0, width, width);
 
 			for (const [x1, y1, player] of boxes) {
 				ctx.fillStyle = colors[player];

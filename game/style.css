@@ -23,12 +23,6 @@ body {
 	transition: 0.2s color;
 }
 canvas {
-	/* Scale */
-	width: calc(100vw - 2em);
-	max-width: calc(100vh - 20em);
-	height: calc(100vw - 2em);
-	max-height: calc(100vh - 20em);
-
 	/* Center */
 	position: absolute;
 	top: 50%;
@@ -38,8 +32,8 @@ canvas {
 
 	/* Misc */
 	border: 2px solid white;
-	border-radius: 1em;
 	box-shadow: 0px 0px 3em #111;
+	background-color: #ccc;
 
 	transition: 1s box-shadow;
 }

@@ -69,6 +69,8 @@ module.exports = http => {
 
 		if (!numUnfilledBoxes) {
 			io.to(game.code).emit('gameOver');
+			log('ending game %s', game.code);
+			delete games[game.code];
 		} else if (!extraTurn) {
 			// End turn
 			game.turn = game.turn === 'red' ? 'blue' : 'red';
@@ -104,7 +106,7 @@ module.exports = http => {
 			log('socket disconnecting');
 			for (const code of Object.keys(socket.rooms)) {
 				if (games[code]) {
-					log('destroying game %s', code);
+					log('cancelling game %s', code);
 					delete games[code];
 					socket.to(code).emit('gameCancelled');
 				}
