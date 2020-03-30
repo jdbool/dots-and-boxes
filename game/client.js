@@ -23,6 +23,10 @@ const createTextElement = (tagName, innerText, parent) => {
 };
 
 const handleError = err => {
+	hide(joinContainer);
+	hide(miscContainer);
+	hide(gameContainer);
+
 	const container = document.createElement('div');
 	container.className = 'bigContainer';
 
@@ -41,7 +45,6 @@ const initGame = (size, ourColor) => {
 	let cancelled = false;
 	socket.on('gameCancelled', () => {
 		cancelled = true;
-		hide(gameContainer);
 		handleError('Opponent left!');
 	});
 
@@ -367,4 +370,8 @@ socket.on('gameStarted', (size, ourColor) => {
 	hide(miscContainer);
 	show(gameContainer);
 	initGame(size, ourColor);
+});
+
+socket.on('disconnect', () => {
+	handleError('Disconnected from server.');
 });
