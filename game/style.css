@@ -110,11 +110,11 @@ canvas {
 .full {
 	width: 100%;
 }
-#roomCode {
+.leftInput {
 	width: 60%;
 	float: left;
 }
-#joinButton {
+.rightButton {
 	width: 30%;
 	float: right;
 }
