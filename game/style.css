@@ -111,10 +111,12 @@ canvas {
 	width: 100%;
 }
 #roomCode {
-	width: 70%;
+	width: 60%;
+	float: left;
 }
 #joinButton {
 	width: 30%;
+	float: right;
 }
 #joinProblem {
 	color: red;
