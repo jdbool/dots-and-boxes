@@ -5,6 +5,7 @@ const socket = io();
 const joinContainer = document.getElementById('joinContainer');
 const miscContainer = document.getElementById('miscContainer');
 const gameContainer = document.getElementById('gameContainer');
+const winnerNameContainer = document.getElementById('winnerNameContainer');
 const gameStatus = document.getElementById('gameStatus');
 
 const colors = {
@@ -13,7 +14,14 @@ const colors = {
 };
 
 const hide = el => void (el.style.display = 'none');
-const show = el => void (el.style.display = 'block');
+const show = (el, display = 'block') => void (el.style.display = display);
+
+const hideAll = () => {
+	hide(joinContainer);
+	hide(miscContainer);
+	hide(gameContainer);
+	hide(winnerNameContainer);
+};
 
 const createTextElement = (tagName, innerText, parent) => {
 	const el = document.createElement(tagName);
@@ -23,9 +31,7 @@ const createTextElement = (tagName, innerText, parent) => {
 };
 
 const handleError = err => {
-	hide(joinContainer);
-	hide(miscContainer);
-	hide(gameContainer);
+	hideAll();
 
 	const container = document.createElement('div');
 	container.className = 'bigContainer';
@@ -366,10 +372,55 @@ document.getElementById('joinButton').onclick = function() {
 };
 
 socket.on('gameStarted', (size, ourColor) => {
-	hide(joinContainer);
-	hide(miscContainer);
+	hideAll();
 	show(gameContainer);
 	initGame(size, ourColor);
+});
+
+socket.on('displayLeaderboard', nameRows => {
+	console.log(nameRows);
+	hideAll();
+
+	const container = document.createElement('div');
+	container.className = 'bigContainer';
+
+	createTextElement('h1', 'Leaderboard', container);
+
+	const table = document.createElement('table');
+	table.className = 'full';
+
+	const head = document.createElement('thead');
+	{
+		const tr = document.createElement('tr');
+		createTextElement('td', 'Name', tr);
+		createTextElement('td', 'Wins', tr);
+		head.appendChild(tr);
+	}
+	table.appendChild(head);
+
+	const body = document.createElement('tbody');
+	for (const { name, wins } of nameRows) {
+		const tr = document.createElement('tr');
+		createTextElement('td', name, tr);
+		createTextElement('td', wins, tr);
+		head.appendChild(tr);
+	}
+	table.appendChild(body);
+
+	container.appendChild(table);
+
+	document.body.appendChild(container);
+});
+
+socket.on('promptWinnerName', callback => {
+	show(winnerNameContainer, 'flex');
+	document.getElementById('winnerNameButton').onclick = function() {
+		const name = document.getElementById('winnerName').value.trim();
+		if (!name) return;
+
+		this.onclick = null;
+		callback(name);
+	};
 });
 
 socket.on('disconnect', () => {

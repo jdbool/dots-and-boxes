@@ -35,6 +35,21 @@
 			</h3>
 			<canvas></canvas>
 		</div>
+		<div id="winnerNameContainer" class="prompt" style="display:none">
+			<div class="bigContainer">
+				<p>You won! Enter your name.</p>
+				<p>
+					<input
+						type="text"
+						id="winnerName"
+						class="leftInput"
+						placeholder="Name"
+					/><button id="winnerNameButton" class="rightButton">
+						Submit
+					</button>
+				</p>
+			</div>
+		</div>
 		<script src="socket.io.js"></script>
 		<script src="client.js"></script>
 	</body>

@@ -115,3 +115,19 @@ canvas {
 #joinProblem {
 	color: red;
 }
+.prompt {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.prompt > div {
+	padding-left: 1em;
+	padding-right: 1em;
+	background-color: #222;
+	border-radius: 1em;
+}

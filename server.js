@@ -32,6 +32,55 @@ const boxLineOffsets = [
 module.exports = http => {
 	const io = require('socket.io')(http);
 
+	const getWinner = game => {
+		let redScore = 0;
+		let blueScore = 0;
+
+		// eslint-disable-next-line no-unused-vars
+		for (const [x, y, color] of game.boxes) {
+			if (color === 'red') ++redScore;
+			else ++blueScore;
+		}
+
+		if (redScore > blueScore) return 'red';
+		else if (blueScore > redScore) return 'blue';
+		return null;
+	};
+
+	const gameFinished = game => {
+		const winner = getWinner(game);
+		if (!winner) return;
+
+		const winnerSocket = winner === 'red' ? game.redSocket : game.blueSocket;
+
+		winnerSocket.emit('promptWinnerName', async name => {
+			if (typeof name !== 'string') return;
+			name = name.trim().toLowerCase();
+			if (!name) return;
+
+			logGame(name);
+			// eslint-disable-next-line no-unused-vars
+			const [_, created] = await Name.findOrCreate({
+				where: { name },
+				defaults: {
+					wins: 1
+				},
+				raw: true
+			});
+			if (!created) {
+				await Name.increment('wins', {
+					where: { name },
+					raw: true
+				});
+			}
+			const nameRows = await Name.findAll({
+				order: [['wins', 'DESC']],
+				limit: 10
+			});
+			winnerSocket.emit('displayLeaderboard', nameRows);
+		});
+	};
+
 	const lineAdded = game => {
 		let extraTurn = false;
 		let numUnfilledBoxes = 0;
@@ -71,6 +120,7 @@ module.exports = http => {
 
 		if (!numUnfilledBoxes) {
 			io.to(game.code).emit('gameOver');
+			gameFinished(game);
 			log('ending game %s', game.code);
 			delete games[game.code];
 		} else if (!extraTurn) {
