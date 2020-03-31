@@ -6,16 +6,18 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 
-require('./src/server')(http);
+const { sequelize } = require('./database');
+require('./server')(http);
 
 app.set('trust proxy', 'loopback');
 
 app.use(express.static(path.join(__dirname, 'game')));
 
-{
+(async () => {
 	const { PORT } = process.env;
 	assert(PORT, 'No PORT environment variable set');
+	await sequelize.sync();
 	http.listen(PORT, () => {
 		console.log(`HTTP listening on port ${PORT}`);
 	});
-}
+})();

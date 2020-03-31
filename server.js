@@ -2,6 +2,8 @@ const randomString = require('randomstring');
 const log = require('debug')('server');
 const logGame = log.extend('game');
 
+const { sequelize, Name } = require('./database');
+
 const newGame = (code, size, redSocket) => ({
 	code,
 	size,
