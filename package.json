@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/jdbool/dots-and-boxes#readme",
   "dependencies": {
+    "compression": "^1.7.4",
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
