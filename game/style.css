@@ -91,6 +91,7 @@ canvas {
 	background-color: #81d4fa;
 	color: white;
 }
+
 .bigContainer input {
 	font-family: 'Courier New', Courier, monospace;
 	font-size: large;
@@ -101,6 +102,20 @@ canvas {
 	border: none;
 	outline: none;
 }
+
+/* for leaderboard table */
+.bigContainer > table {
+	border: 3px solid #CCC;
+	border-radius: 0.5em;
+	text-align: center;
+
+}
+
+/* for centering leaderboard table data */
+td {
+	width: 50%;
+}
+
 .full {
 	width: 100%;
 }
