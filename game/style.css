@@ -105,10 +105,10 @@ canvas {
 
 /* for leaderboard table */
 .bigContainer > table {
-	border: 3px solid #CCC;
+	border: 3px solid #ccc;
 	border-radius: 0.5em;
 	text-align: center;
-
+	text-transform: uppercase;
 }
 
 /* for centering leaderboard table data */
